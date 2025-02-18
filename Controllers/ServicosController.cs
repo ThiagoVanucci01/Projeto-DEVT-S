@@ -104,5 +104,21 @@ namespace Projeto_DEVT_S.Controllers
         {
             return _context.Servicos.Any(e => e.ServicoId == id);
         }
+        // GET: api/Servicos/nome/{nome}
+        [HttpGet("nome/{nome}")]
+        public async Task<ActionResult<IEnumerable<Servico>>> GetServicosByNome(string nome)
+        {
+            var servicos = await _context.Servicos
+                .Where(s => s.Nome.Contains(nome))
+                .ToListAsync();
+
+            if (servicos == null || !servicos.Any())
+            {
+                return NotFound();
+            }
+
+            return servicos;
+        }
     }
+
 }

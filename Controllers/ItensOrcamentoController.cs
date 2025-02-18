@@ -42,6 +42,19 @@ namespace Projeto_DEVT_S.Controllers
             return itemOrcamento;
         }
 
+        // POST: api/ItensOrcamento/CalculateSubtotal
+        [HttpPost("CalculateSubtotal")]
+        public ActionResult<decimal> CalculateSubtotal(ItemOrcamento itemOrcamento)
+        {
+            if (itemOrcamento == null)
+            {
+                return BadRequest("ItemOrcamento não pode ser nulo.");
+            }
+
+            decimal subtotal = itemOrcamento.Quantidade * itemOrcamento.PrecoUnitario;
+            return Ok(subtotal);
+        }
+
         // PUT: api/ItensOrcamento/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -57,6 +70,7 @@ namespace Projeto_DEVT_S.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                await CalculateAndUpdateOrcamentoTotal(itemOrcamento.OrcamentoId);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -80,6 +94,7 @@ namespace Projeto_DEVT_S.Controllers
         {
             _context.ItensOrcamento.Add(itemOrcamento);
             await _context.SaveChangesAsync();
+            await CalculateAndUpdateOrcamentoTotal(itemOrcamento.OrcamentoId);
 
             return CreatedAtAction("GetItemOrcamento", new { id = itemOrcamento.ItemOrcamentoId }, itemOrcamento);
         }
@@ -96,6 +111,7 @@ namespace Projeto_DEVT_S.Controllers
 
             _context.ItensOrcamento.Remove(itemOrcamento);
             await _context.SaveChangesAsync();
+            await CalculateAndUpdateOrcamentoTotal(itemOrcamento.OrcamentoId);
 
             return NoContent();
         }
@@ -103,6 +119,20 @@ namespace Projeto_DEVT_S.Controllers
         private bool ItemOrcamentoExists(Guid id)
         {
             return _context.ItensOrcamento.Any(e => e.ItemOrcamentoId == id);
+        }
+
+        private async Task CalculateAndUpdateOrcamentoTotal(Guid orcamentoId)
+        {
+            var orcamento = await _context.Orcamentos
+                .Include(o => o.Itens)
+                .FirstOrDefaultAsync(o => o.OrcamentoId == orcamentoId);
+
+            if (orcamento != null)
+            {
+                orcamento.Total = orcamento.Itens.Sum(i => i.Quantidade * i.PrecoUnitario);
+                _context.Entry(orcamento).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

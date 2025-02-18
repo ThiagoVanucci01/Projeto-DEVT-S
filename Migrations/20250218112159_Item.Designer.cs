@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Projeto_DEVT_S.Data;
 
@@ -11,9 +12,11 @@ using Projeto_DEVT_S.Data;
 namespace Projeto_DEVT_S.Migrations
 {
     [DbContext(typeof(ProjetoDevContext))]
-    partial class ProjetoDevContextModelSnapshot : ModelSnapshot
+    [Migration("20250218112159_Item")]
+    partial class Item
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

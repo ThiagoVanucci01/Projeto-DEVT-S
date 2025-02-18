@@ -7,7 +7,7 @@
         public Guid ServicoId { get; set; }
         public int Quantidade { get; set; }
         public decimal PrecoUnitario { get; set; }
-        public decimal Subtotal { get; set; }
+        public decimal? Subtotal { get; set; }
         public Servico? Servico { get; set; }
         public Orcamento? Orcamento { get; set; }
     }

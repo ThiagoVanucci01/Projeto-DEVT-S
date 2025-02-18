@@ -42,6 +42,39 @@ namespace Projeto_DEVT_S.Controllers
             return orcamento;
         }
 
+        // GET: api/Orcamentos/data/{data}
+        [HttpGet("data/{data}")]
+        public async Task<ActionResult<IEnumerable<Orcamento>>> GetOrcamentosByDate(DateTime data)
+        {
+            var orcamentos = await _context.Orcamentos
+                .Where(o => o.Data.Date == data.Date)
+                .ToListAsync();
+
+            if (orcamentos == null || !orcamentos.Any())
+            {
+                return NotFound();
+            }
+
+            return orcamentos;
+        }
+
+        // GET: api/Orcamentos/cliente/{nome}
+        [HttpGet("cliente/{nome}")]
+        public async Task<ActionResult<IEnumerable<Orcamento>>> GetOrcamentosByClienteNome(string nome)
+        {
+            var orcamentos = await _context.Orcamentos
+                .Include(o => o.Cliente)
+                .Where(o => o.Cliente.Nome.Contains(nome, StringComparison.OrdinalIgnoreCase))
+                .ToListAsync();
+
+            if (orcamentos == null || !orcamentos.Any())
+            {
+                return NotFound();
+            }
+
+            return orcamentos;
+        }
+
         // PUT: api/Orcamentos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

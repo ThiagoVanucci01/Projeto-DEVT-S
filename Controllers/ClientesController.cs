@@ -42,6 +42,39 @@ namespace Projeto_DEVT_S.Controllers
             return cliente;
         }
 
+        // GET: api/Clientes/nome/{nome}
+        [HttpGet("nome/{nome}")]
+        public async Task<ActionResult<IEnumerable<Cliente>>> GetClienteByName(string nome)
+        {
+            var clientes = await _context.Clientes
+                .Where(c => c.Nome.Contains(nome))
+                .ToListAsync();
+
+            if (clientes == null || !clientes.Any())
+            {
+                return NotFound();
+            }
+
+            return clientes;
+        }
+
+        // GET: api/Clientes/nome/{nome}
+        [HttpGet("email/{email}")]
+        public async Task<ActionResult<IEnumerable<Cliente>>> GetClienteByEmail(string email)
+        {
+            var clientes = await _context.Clientes
+                .Where(c => c.Email.Contains(email))
+                .ToListAsync();
+
+            if (clientes == null || !clientes.Any())
+            {
+                return NotFound();
+            }
+
+            return clientes;
+        }
+
+
         // PUT: api/Clientes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
