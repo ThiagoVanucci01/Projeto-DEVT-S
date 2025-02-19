@@ -12,8 +12,8 @@ using Projeto_DEVT_S.Data;
 namespace Projeto_DEVT_S.Migrations
 {
     [DbContext(typeof(ProjetoDevContext))]
-    [Migration("20250218191512_somee")]
-    partial class somee
+    [Migration("20250219183840_Inicio")]
+    partial class Inicio
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
